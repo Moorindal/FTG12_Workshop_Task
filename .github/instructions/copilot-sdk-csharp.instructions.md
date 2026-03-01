@@ -1,5 +1,5 @@
 ---
-applyTo: '**.cs, **.csproj'
+applyTo: '**/*.cs, **/*.csproj'
 description: 'This file provides guidance on building C# applications using GitHub Copilot SDK.'
 name: 'GitHub Copilot SDK C# Instructions'
 ---
