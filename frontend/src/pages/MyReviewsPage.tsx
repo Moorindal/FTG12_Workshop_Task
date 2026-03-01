@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMyReviews, useUpdateReview } from '../hooks/useReviews';
+import { useAuth } from '../hooks/useAuth';
 import { ReviewForm } from '../components/reviews/ReviewForm';
 import { Pagination } from '../components/common/Pagination';
 import './MyReviewsPage.css';
@@ -25,6 +26,7 @@ function StatusBadge({ statusName }: { statusName: string }) {
 export function MyReviewsPage() {
   const { reviews, loading, error, page, setPage, totalPages, refresh } = useMyReviews();
   const { updateReview } = useUpdateReview();
+  const { user } = useAuth();
   const [editingId, setEditingId] = useState<number | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -73,7 +75,9 @@ export function MyReviewsPage() {
                 </div>
                 <p className="review-text">{review.text}</p>
                 <div className="my-review-actions">
-                  <button onClick={() => setEditingId(review.id)}>Edit</button>
+                  {!user?.isAdministrator && (
+                    <button onClick={() => setEditingId(review.id)}>Edit</button>
+                  )}
                 </div>
               </>
             )}

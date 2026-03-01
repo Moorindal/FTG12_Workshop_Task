@@ -69,6 +69,29 @@ describe('ProductsPage', () => {
     });
   });
 
+  it('renders products in a vertical list container', async () => {
+    server.use(
+      http.get('http://localhost:7100/api/products', () => {
+        return HttpResponse.json(
+          createPaginatedResponse([
+            createProduct({ id: 1, name: 'Alpha' }),
+          ]),
+        );
+      }),
+    );
+    const { container } = render(
+      <MemoryRouter>
+        <ProductsPage />
+      </MemoryRouter>
+    );
+    await waitFor(() => {
+      expect(screen.getByText('Alpha')).toBeInTheDocument();
+    });
+    const listEl = container.querySelector('.products-list');
+    expect(listEl).toBeInTheDocument();
+    expect(container.querySelector('.products-grid')).not.toBeInTheDocument();
+  });
+
   it('renders pagination when multiple pages', async () => {
     server.use(
       http.get('http://localhost:7100/api/products', () => {

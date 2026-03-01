@@ -14,11 +14,11 @@ describe('UserRow', () => {
     isBanned: true, bannedAt: '2024-06-01T00:00:00Z', createdAt: '2024-01-01T00:00:00Z',
   };
 
-  function renderRow(user: User, onBan = vi.fn(), onUnban = vi.fn()) {
+  function renderRow(user: User, onBan = vi.fn(), onUnban = vi.fn(), currentUserId?: number) {
     return render(
       <table>
         <tbody>
-          <UserRow user={user} onBan={onBan} onUnban={onUnban} />
+          <UserRow user={user} currentUserId={currentUserId} onBan={onBan} onUnban={onUnban} />
         </tbody>
       </table>
     );
@@ -69,5 +69,20 @@ describe('UserRow', () => {
     await user.click(screen.getByText('Restore'));
     expect(onUnban).toHaveBeenCalledWith(3);
     vi.restoreAllMocks();
+  });
+
+  it('hides ban button for admin users', () => {
+    const adminUser: User = {
+      id: 10, username: 'admin2', isAdministrator: true,
+      isBanned: false, bannedAt: null, createdAt: '2024-01-01T00:00:00Z',
+    };
+    renderRow(adminUser);
+    expect(screen.queryByText('Ban')).not.toBeInTheDocument();
+    expect(screen.queryByText('Restore')).not.toBeInTheDocument();
+  });
+
+  it('hides ban button for current user (self)', () => {
+    renderRow(activeUser, vi.fn(), vi.fn(), activeUser.id);
+    expect(screen.queryByText('Ban')).not.toBeInTheDocument();
   });
 });

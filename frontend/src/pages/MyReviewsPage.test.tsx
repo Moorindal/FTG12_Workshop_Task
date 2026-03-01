@@ -12,9 +12,18 @@ vi.mock('../hooks/useReviews', () => ({
   useUpdateReview: () => ({ updateReview: mockUpdateReview, loading: false, error: null }),
 }));
 
+const mockUseAuth = vi.fn();
+vi.mock('../hooks/useAuth', () => ({
+  useAuth: () => mockUseAuth(),
+}));
+
 describe('MyReviewsPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockUseAuth.mockReturnValue({
+      user: { id: 5, username: 'TestUser', isAdministrator: false, isBanned: false },
+      isAdmin: false,
+    });
   });
 
   it('shows loading state', () => {
@@ -94,5 +103,25 @@ describe('MyReviewsPage', () => {
     );
     expect(screen.getByRole('alert')).toBeInTheDocument();
     expect(screen.getByText('Failed to load reviews')).toBeInTheDocument();
+  });
+
+  it('hides Edit button for admin users', () => {
+    mockUseAuth.mockReturnValue({
+      user: { id: 1, username: 'Admin', isAdministrator: true, isBanned: false },
+      isAdmin: true,
+    });
+    mockReviewsResult = {
+      reviews: [
+        { id: 1, productId: 1, productName: 'P1', userId: 1, username: 'Admin', statusId: 2, statusName: 'Approved', rating: 4, text: 'ok', createdAt: '2024-06-15T10:00:00Z' },
+      ],
+      loading: false, error: null, page: 1, setPage: mockSetPage, totalPages: 1, refresh: mockRefresh,
+    };
+    render(
+      <MemoryRouter>
+        <MyReviewsPage />
+      </MemoryRouter>
+    );
+    expect(screen.getByText('P1')).toBeInTheDocument();
+    expect(screen.queryByText('Edit')).not.toBeInTheDocument();
   });
 });

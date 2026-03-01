@@ -14,7 +14,7 @@ export function ProductsPage() {
       {!loading && !error && products.length === 0 && (
         <p className="status-empty">No products found.</p>
       )}
-      <div className="products-grid">
+      <div className="products-list">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

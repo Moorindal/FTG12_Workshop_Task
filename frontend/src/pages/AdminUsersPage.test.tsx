@@ -17,9 +17,15 @@ vi.mock('../hooks/useUsers', () => ({
   useUsers: () => mockResult,
 }));
 
+const mockUseAuth = vi.fn();
+vi.mock('../hooks/useAuth', () => ({
+  useAuth: () => mockUseAuth(),
+}));
+
 describe('AdminUsersPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockUseAuth.mockReturnValue({ user: { id: 99, username: 'admin', isAdministrator: true }, token: 'tok' });
   });
 
   it('shows loading state', () => {

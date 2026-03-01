@@ -166,4 +166,47 @@ describe('ProductDetailsPage', () => {
     });
     expect(screen.queryByText('Approved')).not.toBeInTheDocument();
   });
+
+  it('hides Add Review button for admin users', async () => {
+    mockUseAuth.mockReturnValue({
+      user: { id: 1, username: 'Admin', isAdministrator: true, isBanned: false },
+      isAdmin: true,
+    });
+    server.use(
+      http.get('http://localhost:7100/api/products/1', () =>
+        HttpResponse.json(createProduct({ id: 1, name: 'Widget' })),
+      ),
+      http.get('http://localhost:7100/api/products/1/reviews', () =>
+        HttpResponse.json(productReviewsResponse([
+          createReview({ userId: 99 }),
+        ])),
+      ),
+    );
+    renderPage(1);
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: 'Widget' })).toBeInTheDocument();
+    });
+    expect(screen.queryByText('Add Review')).not.toBeInTheDocument();
+  });
+
+  it('hides Edit Review button for admin users', async () => {
+    mockUseAuth.mockReturnValue({
+      user: { id: 1, username: 'Admin', isAdministrator: true, isBanned: false },
+      isAdmin: true,
+    });
+    const userReview = createReview({ id: 10, userId: 1, username: 'Admin', rating: 4, text: 'Admin review' });
+    server.use(
+      http.get('http://localhost:7100/api/products/1', () =>
+        HttpResponse.json(createProduct({ id: 1, name: 'Widget' })),
+      ),
+      http.get('http://localhost:7100/api/products/1/reviews', () =>
+        HttpResponse.json(productReviewsResponse([], userReview)),
+      ),
+    );
+    renderPage(1);
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: 'Widget' })).toBeInTheDocument();
+    });
+    expect(screen.queryByText('Edit Review')).not.toBeInTheDocument();
+  });
 });

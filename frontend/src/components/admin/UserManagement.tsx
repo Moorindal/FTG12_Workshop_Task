@@ -4,11 +4,12 @@ import './UserManagement.css';
 
 interface UserManagementProps {
   users: User[];
+  currentUserId?: number;
   onBan: (userId: number) => Promise<void>;
   onUnban: (userId: number) => Promise<void>;
 }
 
-export function UserManagement({ users, onBan, onUnban }: UserManagementProps) {
+export function UserManagement({ users, currentUserId, onBan, onUnban }: UserManagementProps) {
   if (users.length === 0) {
     return <p className="status-empty">No users found.</p>;
   }
@@ -27,7 +28,7 @@ export function UserManagement({ users, onBan, onUnban }: UserManagementProps) {
         </thead>
         <tbody>
           {users.map((user) => (
-            <UserRow key={user.id} user={user} onBan={onBan} onUnban={onUnban} />
+            <UserRow key={user.id} user={user} currentUserId={currentUserId} onBan={onBan} onUnban={onUnban} />
           ))}
         </tbody>
       </table>

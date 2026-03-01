@@ -81,10 +81,10 @@ export function ProductDetailsPage() {
       <section className="reviews-section">
         <div className="reviews-header">
           <h2>Reviews</h2>
-          {!reviewsLoading && !hasReviewed && !showForm && (
+          {!reviewsLoading && !hasReviewed && !showForm && !user?.isAdministrator && (
             <button onClick={() => setShowForm(true)}>Add Review</button>
           )}
-          {!reviewsLoading && hasReviewed && !showForm && (
+          {!reviewsLoading && hasReviewed && !showForm && !user?.isAdministrator && (
             <button onClick={() => setShowForm(true)}>Edit Review</button>
           )}
         </div>

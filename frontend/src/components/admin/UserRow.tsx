@@ -4,6 +4,7 @@ import './UserRow.css';
 
 interface UserRowProps {
   user: User;
+  currentUserId?: number;
   onBan: (userId: number) => Promise<void>;
   onUnban: (userId: number) => Promise<void>;
 }
@@ -17,9 +18,11 @@ function formatDate(dateStr: string | null): string {
   });
 }
 
-export function UserRow({ user, onBan, onUnban }: UserRowProps) {
+export function UserRow({ user, currentUserId, onBan, onUnban }: UserRowProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const canManage = !user.isAdministrator && user.id !== currentUserId;
 
   const handleBan = async () => {
     const warning = user.isAdministrator
@@ -66,7 +69,7 @@ export function UserRow({ user, onBan, onUnban }: UserRowProps) {
       <td>{formatDate(user.bannedAt)}</td>
       <td>
         {error && <span className="row-error">{error}</span>}
-        {user.isBanned ? (
+        {canManage && (user.isBanned ? (
           <button className="btn-restore" onClick={handleUnban} disabled={loading}>
             {loading ? '...' : 'Restore'}
           </button>
@@ -74,7 +77,7 @@ export function UserRow({ user, onBan, onUnban }: UserRowProps) {
           <button className="btn-ban" onClick={handleBan} disabled={loading}>
             {loading ? '...' : 'Ban'}
           </button>
-        )}
+        ))}
       </td>
     </tr>
   );
