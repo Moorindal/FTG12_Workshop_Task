@@ -90,3 +90,6 @@ lerna-debug.log*
 
 ## Vite
 vite.config.ts.timestamp-*
+
+## VS Code personal/auto-generated settings (contain session-specific tool approvals)
+.vscode/settings.json

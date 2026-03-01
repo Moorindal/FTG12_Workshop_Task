@@ -30,32 +30,32 @@ export function useHealthCheck(): UseHealthCheckResult {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
 
-    fetchHealth()
+    fetchHealth(controller.signal)
       .then((result) => {
-        if (!cancelled)
-        {
-          setData(result);
-          setError(null);
+        if (controller.signal.aborted) {
+          return;
         }
+        setData(result);
+        setError(null);
       })
       .catch((err: unknown) => {
-        if (!cancelled)
-        {
-          const message = err instanceof Error ? err.message : 'Unknown error';
-          setError(message);
+        if (controller.signal.aborted) {
+          return;
         }
+        const message = err instanceof Error ? err.message : 'Unknown error';
+        setError(message);
       })
       .finally(() => {
-        if (!cancelled)
-        {
-          setLoading(false);
+        if (controller.signal.aborted) {
+          return;
         }
+        setLoading(false);
       });
 
     return () => {
-      cancelled = true;
+      controller.abort();
     };
   }, []);
 

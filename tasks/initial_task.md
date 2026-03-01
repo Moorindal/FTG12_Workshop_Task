@@ -97,7 +97,7 @@ FTG12_Workshop_Task/
 
 | # | Task | Details |
 |---|------|---------|
-| 3 | Create solution file | Run `dotnet new sln -n FTG12_ReviewsApi -o backend`. |
+| 3 | Create solution file | Run `dotnet new sln -n FTG12_ReviewsApi -o backend --format slnx`. This generates `FTG12_ReviewsApi.slnx` (the XML-based solution format). |
 | 4 | Create Web API project | Run `dotnet new webapi -n FTG12_ReviewsApi -o backend/FTG12_ReviewsApi --use-controllers`. |
 | 5 | Add project to solution | Run `dotnet sln backend/FTG12_ReviewsApi.slnx add backend/FTG12_ReviewsApi/FTG12_ReviewsApi.csproj`. |
 | 6 | Configure `FTG12_ReviewsApi.csproj` | Target `net10.0`. Enable `<Nullable>enable</Nullable>` and `<ImplicitUsings>enable</ImplicitUsings>`. Add `<AssemblyName>` and `<RootNamespace>` set to `FTG12_ReviewsApi`. |
