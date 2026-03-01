@@ -21,7 +21,12 @@ Implement the authentication endpoints: login (POST), logout (POST), and current
     }
   }
   ```
-- Failure response (401): `"Invalid username or password."`
+- Failure response (401):
+  ```json
+  {
+    "title": "Unauthorized",
+    "detail": "Invalid username or password."
+  }
 - FluentValidation: username and password are required, non-empty.
 
 ### Logout endpoint
