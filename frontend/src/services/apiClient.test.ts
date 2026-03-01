@@ -37,8 +37,8 @@ describe('apiClient', () => {
   it('handles 401 by clearing token', async () => {
     localStorage.setItem('token', createJwt());
     // Prevent actual navigation
-    const origHref = window.location.href;
-    Object.defineProperty(window, 'location', { value: { href: origHref }, writable: true, configurable: true });
+    const origLocation = window.location;
+    Object.defineProperty(window, 'location', { value: { href: '' }, writable: true, configurable: true });
     server.use(
       http.get('http://localhost:7100/api/products', () => {
         return new HttpResponse(null, { status: 401 });
@@ -46,6 +46,8 @@ describe('apiClient', () => {
     );
     await expect(api.getProducts(1, 10)).rejects.toThrow('Unauthorized');
     expect(localStorage.getItem('token')).toBeNull();
+    // Restore original window.location
+    Object.defineProperty(window, 'location', { value: origLocation, writable: true, configurable: true });
   });
 
   it('parses ProblemDetails error response', async () => {

@@ -37,11 +37,12 @@ async function handleResponse<T>(response: Response): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-function authHeaders(): HeadersInit {
+function authHeaders(includeContentType = false): HeadersInit {
   const token = getToken();
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
+  const headers: Record<string, string> = {};
+  if (includeContentType) {
+    headers['Content-Type'] = 'application/json';
+  }
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
@@ -50,7 +51,7 @@ function authHeaders(): HeadersInit {
 
 async function get<T>(path: string, signal?: AbortSignal): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
-    headers: authHeaders(),
+    headers: authHeaders(false),
     signal,
   });
   return handleResponse<T>(response);
@@ -59,7 +60,7 @@ async function get<T>(path: string, signal?: AbortSignal): Promise<T> {
 async function post<T>(path: string, body?: unknown, signal?: AbortSignal): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method: 'POST',
-    headers: authHeaders(),
+    headers: authHeaders(body !== undefined),
     body: body !== undefined ? JSON.stringify(body) : undefined,
     signal,
   });
@@ -69,7 +70,7 @@ async function post<T>(path: string, body?: unknown, signal?: AbortSignal): Prom
 async function put<T>(path: string, body?: unknown, signal?: AbortSignal): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     method: 'PUT',
-    headers: authHeaders(),
+    headers: authHeaders(body !== undefined),
     body: body !== undefined ? JSON.stringify(body) : undefined,
     signal,
   });

@@ -1,4 +1,4 @@
-﻿export interface Review {
+export interface Review {
   id: number;
   productId: number;
   productName: string;

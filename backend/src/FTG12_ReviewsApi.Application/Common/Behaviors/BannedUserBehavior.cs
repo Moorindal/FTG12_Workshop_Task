@@ -12,13 +12,18 @@ namespace FTG12_ReviewsApi.Application.Common.Behaviors;
 public class BannedUserBehavior<TRequest, TResponse>(
     ICurrentUserService currentUserService,
     IBannedUserRepository bannedUserRepository) : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IBannedUserCheck
+    where TRequest : notnull
 {
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
+        if (request is not IBannedUserCheck)
+        {
+            return await next(cancellationToken);
+        }
+
         var userId = currentUserService.UserId;
 
         if (userId.HasValue)

@@ -19,15 +19,12 @@ export function ProductDetailsPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [productLoading, setProductLoading] = useState(true);
   const [productError, setProductError] = useState<string | null>(null);
-  const [lastProductId, setLastProductId] = useState(productId);
-
   // Reset state when navigating to a different product
-  if (lastProductId !== productId) {
-    setLastProductId(productId);
+  useEffect(() => {
     setProduct(null);
     setProductLoading(true);
     setProductError(null);
-  }
+  }, [productId]);
 
   const { reviews, loading: reviewsLoading, error: reviewsError, page, setPage, totalPages, refresh } =
     useProductReviews(productId);
@@ -74,7 +71,7 @@ export function ProductDetailsPage() {
       <section className="reviews-section">
         <div className="reviews-header">
           <h2>Reviews</h2>
-          {!hasReviewed && !showForm && (
+          {!reviewsLoading && !hasReviewed && !showForm && (
             <button onClick={() => setShowForm(true)}>Add Review</button>
           )}
         </div>
