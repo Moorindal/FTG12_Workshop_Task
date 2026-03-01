@@ -22,7 +22,7 @@ ${1}
 - `git pull`
 - If pull fails, STOP and report the error.
 
-4) Stage and commit
+4) Stage and commit all current changes
 - `git add .`
 - If no commit message is provided, use:
   - `git commit -m "Update changes"`

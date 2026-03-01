@@ -11,7 +11,8 @@ applyTo: '**/*.cs'
 
 ## General Instructions
 - Make only high confidence suggestions when reviewing code changes.
-- Write code with good maintainability practices, including comments on why certain design decisions were made.
+- Write code with good maintainability practices.
+- Do not add unnecessary comments to the code.
 - Handle edge cases and write clear exception handling.
 - For libraries or external dependencies, mention their usage and purpose in comments.
 
