@@ -135,13 +135,19 @@ Runs ESLint with TypeScript and React rules.
 
 ### API Base URL
 
-The backend URL is defined in `src/services/apiClient.ts`:
+The backend URL is resolved in `src/services/apiClient.ts` from the `VITE_API_BASE_URL` environment variable, falling back to `http://localhost:7100` when the variable is not set:
 
 ```typescript
-const API_BASE_URL = 'http://localhost:7100';
+const API_BASE_URL =
+  (import.meta as { env?: { VITE_API_BASE_URL?: string } }).env?.VITE_API_BASE_URL ??
+  'http://localhost:7100';
 ```
 
-Update this value if the backend runs on a different port.
+To override the default, set `VITE_API_BASE_URL` in a `.env.local` file at the root of the `frontend/` folder:
+
+```
+VITE_API_BASE_URL=http://localhost:7100
+```
 
 ### TypeScript
 
