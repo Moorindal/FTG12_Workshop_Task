@@ -1,7 +1,9 @@
 import type { HealthStatus } from '../types/health';
 
-/** Base URL for the backend API. */
-const API_BASE_URL = 'http://localhost:7100';
+/** Base URL for the backend API. Falls back to localhost when the VITE_API_BASE_URL env var is not set. */
+const API_BASE_URL =
+  (import.meta as { env?: { VITE_API_BASE_URL?: string } }).env?.VITE_API_BASE_URL ??
+  'http://localhost:7100';
 
 /**
  * Fetches the health status from the backend API.
@@ -18,5 +20,16 @@ export async function fetchHealth(signal?: AbortSignal): Promise<HealthStatus> {
     throw new Error(`Health check failed with status ${response.status}`);
   }
 
-  return response.json() as Promise<HealthStatus>;
+  const data: unknown = await response.json();
+
+  if (
+    typeof data !== 'object' ||
+    data === null ||
+    typeof (data as Record<string, unknown>).status !== 'string' ||
+    typeof (data as Record<string, unknown>).timestamp !== 'string'
+  ) {
+    throw new Error('Unexpected response shape from health endpoint');
+  }
+
+  return data as HealthStatus;
 }
