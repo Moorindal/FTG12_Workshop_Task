@@ -16,7 +16,8 @@ Implement the authentication endpoints: login (POST), logout (POST), and current
     "user": {
       "id": 1,
       "username": "Admin",
-      "isAdministrator": true
+      "isAdministrator": true,
+      "isBanned": false
     }
   }
   ```

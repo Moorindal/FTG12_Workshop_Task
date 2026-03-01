@@ -91,7 +91,7 @@ Create the backend integration test project and write end-to-end tests for all A
 ## Notes / Edge Cases
 - In-memory SQLite naturally resets per `WebApplicationFactory` instance, making test isolation straightforward.
 - Use `IClassFixture<WebApplicationFactory>` for test classes that can share a factory, or create a new factory per class.
-- Test the full request deserializaton → handler → database → response serialization pipeline.
+- Test the full request deserialization → handler → database → response serialization pipeline.
 - Verify that `Content-Type: application/problem+json` is set for error responses.
 
 ## Dependencies

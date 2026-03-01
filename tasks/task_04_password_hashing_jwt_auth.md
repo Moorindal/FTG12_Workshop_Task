@@ -13,7 +13,7 @@ Implement the password hashing service using BCrypt and configure JWT Bearer aut
 
 ### JWT configuration
 - Add NuGet package: `Microsoft.AspNetCore.Authentication.JwtBearer` (to Web/API project).
-- Define `ITokenService` interface in `Application/Common/Interfaces/`:
+- Define `IJwtTokenService` interface in `Application/Common/Interfaces/`:
   - `string GenerateToken(User user)` — generates a JWT with claims: `sub` (userId), `unique_name` (username), `role` ("Admin" or "User").
 - Implement `JwtTokenService` in `Infrastructure/Services/`.
 - Configure JWT settings in `appsettings.json`:
@@ -39,7 +39,7 @@ Implement the password hashing service using BCrypt and configure JWT Bearer aut
 
 ## Acceptance Criteria
 - [ ] `IPasswordHasher` and `PasswordHasher` implemented; hashing and verification work correctly.
-- [ ] `ITokenService` and `JwtTokenService` implemented; tokens contain correct claims.
+- [ ] `IJwtTokenService` and `JwtTokenService` implemented; tokens contain correct claims.
 - [ ] JWT is configured in `Program.cs` with validation parameters (issuer, audience, signing key, lifetime).
 - [ ] `ICurrentUserService` reads user identity from the JWT claims in `HttpContext`.
 - [ ] Token expiration is set to 24 hours.

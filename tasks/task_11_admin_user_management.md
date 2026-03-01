@@ -11,26 +11,24 @@ Implement admin-only endpoints to list users with ban status and to ban/unban us
 - Returns all users with ban status.
 - Response (200):
   ```json
-  {
-    "items": [
-      {
-        "id": 1,
-        "username": "Admin",
-        "isAdministrator": true,
-        "isBanned": false,
-        "bannedAt": null,
-        "createdAt": "2026-03-01T00:00:00Z"
-      },
-      {
-        "id": 2,
-        "username": "User1",
-        "isAdministrator": false,
-        "isBanned": true,
-        "bannedAt": "2026-03-01T10:00:00Z",
-        "createdAt": "2026-03-01T00:00:00Z"
-      }
-    ]
-  }
+  [
+    {
+      "id": 1,
+      "username": "Admin",
+      "isAdministrator": true,
+      "isBanned": false,
+      "bannedAt": null,
+      "createdAt": "2026-03-01T00:00:00Z"
+    },
+    {
+      "id": 2,
+      "username": "User1",
+      "isAdministrator": false,
+      "isBanned": true,
+      "bannedAt": "2026-03-01T10:00:00Z",
+      "createdAt": "2026-03-01T00:00:00Z"
+    }
+  ]
   ```
 - No pagination needed (small user set for training), but can be added.
 

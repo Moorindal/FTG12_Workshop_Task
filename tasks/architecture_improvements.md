@@ -237,7 +237,7 @@ All exception types are defined in `Application/Common/Exceptions/` and thrown b
 - JWT claims include `role` claim.
 - ASP.NET Core `[Authorize(Roles = "Admin")]` attribute on admin-only endpoints.
 - `[Authorize]` on all authenticated endpoints.
-- **Banned user check**: A custom authorization handler or middleware checks the `BannedUsers` table. If the current user is banned, the request is rejected with 403 Forbidden and a message: `"Your account has been banned. You cannot perform this action."` This applies to create/update review operations only.
+- **Banned user check**: A custom authorization handler or middleware checks the `BannedUsers` table. If the current user is banned, the request is rejected with 403 Forbidden and a message: `"Your account has been banned. You cannot create or update reviews."` This applies to create/update review operations only.
 
 ### HTTP responses for authorization failures
 

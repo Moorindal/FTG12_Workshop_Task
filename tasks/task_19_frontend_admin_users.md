@@ -20,7 +20,7 @@ Implement the admin users management page with ban/unban functionality.
 
 ### API client methods
 - Add to `apiClient.ts`:
-  - `getUsers()` → `User[]`.
+  - `getUsers()` → `User[]` (bare array, no wrapper).
   - `banUser(userId)` → `User`.
   - `unbanUser(userId)` → `User`.
 
