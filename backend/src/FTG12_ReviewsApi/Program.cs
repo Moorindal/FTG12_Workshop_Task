@@ -49,6 +49,9 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+
 // Configure CORS to allow the React frontend origin.
 builder.Services.AddCors(options =>
 {
@@ -82,3 +85,8 @@ app.MapControllers();
 app.MapHealthChecks("/healthz");
 
 app.Run();
+
+/// <summary>
+/// Makes the Program class accessible for integration testing with WebApplicationFactory.
+/// </summary>
+public partial class Program;
