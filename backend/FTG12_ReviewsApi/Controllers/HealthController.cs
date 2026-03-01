@@ -7,7 +7,7 @@ namespace FTG12_ReviewsApi.Controllers;
 /// Provides a simple health check endpoint for monitoring the API status.
 /// </summary>
 [ApiController]
-[Route("[controller]")]
+[Route("health")]
 public class HealthController : ControllerBase
 {
     /// <summary>
