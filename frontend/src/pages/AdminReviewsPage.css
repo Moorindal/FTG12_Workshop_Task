@@ -1,0 +1,38 @@
+.admin-reviews-page h1 {
+  margin-bottom: 1rem;
+}
+
+.filters-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.filter-group label {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.filter-group select,
+.filter-group input {
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.btn-clear-filters {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+}

@@ -1,0 +1,47 @@
+.btn-ban {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  background: rgba(211, 47, 47, 0.15);
+  color: #d32f2f;
+  border: 1px solid #d32f2f;
+}
+
+.btn-ban:hover {
+  background: rgba(211, 47, 47, 0.3);
+}
+
+.btn-restore {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  background: rgba(46, 125, 50, 0.15);
+  color: #2e7d32;
+  border: 1px solid #2e7d32;
+}
+
+.btn-restore:hover {
+  background: rgba(46, 125, 50, 0.3);
+}
+
+.row-error {
+  color: #d32f2f;
+  font-size: 0.8rem;
+  margin-right: 0.5rem;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.badge-approved {
+  background: rgba(46, 125, 50, 0.15);
+  color: #2e7d32;
+}
+
+.badge-rejected {
+  background: rgba(211, 47, 47, 0.15);
+  color: #d32f2f;
+}

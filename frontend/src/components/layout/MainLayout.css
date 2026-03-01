@@ -1,0 +1,9 @@
+.main-layout {
+  min-height: 100vh;
+}
+
+.main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 72px 1rem 2rem;
+}

@@ -1,0 +1,28 @@
+.review-status-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.btn-approve {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  background: rgba(46, 125, 50, 0.15);
+  color: #2e7d32;
+  border: 1px solid #2e7d32;
+}
+
+.btn-approve:hover {
+  background: rgba(46, 125, 50, 0.3);
+}
+
+.btn-reject {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  background: rgba(211, 47, 47, 0.15);
+  color: #d32f2f;
+  border: 1px solid #d32f2f;
+}
+
+.btn-reject:hover {
+  background: rgba(211, 47, 47, 0.3);
+}

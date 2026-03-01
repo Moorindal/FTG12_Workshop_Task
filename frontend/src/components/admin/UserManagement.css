@@ -1,0 +1,39 @@
+.user-management-table-wrapper {
+  overflow-x: auto;
+}
+
+.user-management-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.user-management-table th,
+.user-management-table td {
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.user-management-table th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.role-admin {
+  background: rgba(63, 81, 181, 0.15);
+  color: #3f51b5;
+}
+
+.role-user {
+  background: rgba(158, 158, 158, 0.15);
+  color: #666;
+}
