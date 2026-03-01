@@ -1,3 +1,8 @@
 <Solution>
-  <Project Path="FTG12_ReviewsApi/FTG12_ReviewsApi.csproj" />
+  <Folder Name="/src/">
+    <Project Path="src/FTG12_ReviewsApi/FTG12_ReviewsApi.csproj" />
+    <Project Path="src/FTG12_ReviewsApi.Domain/FTG12_ReviewsApi.Domain.csproj" />
+    <Project Path="src/FTG12_ReviewsApi.Application/FTG12_ReviewsApi.Application.csproj" />
+    <Project Path="src/FTG12_ReviewsApi.Infrastructure/FTG12_ReviewsApi.Infrastructure.csproj" />
+  </Folder>
 </Solution>
