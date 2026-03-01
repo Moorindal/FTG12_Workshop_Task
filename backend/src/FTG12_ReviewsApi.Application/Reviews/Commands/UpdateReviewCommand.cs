@@ -36,6 +36,11 @@ public class UpdateReviewCommandHandler(
         var userId = currentUserService.UserId
             ?? throw new UnauthorizedAccessException("User is not authenticated.");
 
+        if (currentUserService.IsAdmin)
+        {
+            throw new ForbiddenException("Administrators cannot edit reviews.");
+        }
+
         var review = await reviewRepository.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new NotFoundException(nameof(Domain.Entities.Review), request.Id);
 

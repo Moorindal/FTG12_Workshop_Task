@@ -111,4 +111,17 @@ public class CreateReviewCommandHandlerTests
 
         await act.Should().ThrowAsync<ForbiddenException>();
     }
+
+    [Fact]
+    public async Task Handle_WhenAdmin_ThrowsForbidden()
+    {
+        _currentUserService.UserId.Returns(1);
+        _currentUserService.IsAdmin.Returns(true);
+
+        Func<Task> act = () => _handler.Handle(
+            new CreateReviewCommand(1, 4, "Text"), CancellationToken.None);
+
+        await act.Should().ThrowAsync<ForbiddenException>()
+            .WithMessage("*cannot create reviews*");
+    }
 }

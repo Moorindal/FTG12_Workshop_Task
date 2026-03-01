@@ -29,7 +29,7 @@ public class ProductEndpointTests : IClassFixture<CustomWebApplicationFactory>
         var result = await response.Content.ReadFromJsonAsync<PaginatedList<ProductDto>>(JsonOptions);
         result.Should().NotBeNull();
         result!.Items.Should().NotBeEmpty();
-        result.TotalCount.Should().Be(4);
+        result.TotalCount.Should().Be(29);
     }
 
     [Fact]
@@ -53,7 +53,7 @@ public class ProductEndpointTests : IClassFixture<CustomWebApplicationFactory>
         var result = await response.Content.ReadFromJsonAsync<PaginatedList<ProductDto>>(JsonOptions);
         result.Should().NotBeNull();
         result!.Items.Should().HaveCount(2);
-        result.TotalPages.Should().Be(2);
+        result.TotalPages.Should().Be(15);
     }
 
     [Fact]
@@ -78,5 +78,36 @@ public class ProductEndpointTests : IClassFixture<CustomWebApplicationFactory>
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         response.Content.Headers.ContentType?.MediaType.Should().Be("application/problem+json");
+    }
+
+    [Fact]
+    public async Task GetProducts_DefaultPageSize_ReturnsFirstTenProducts()
+    {
+        var client = _factory.CreateAuthenticatedClient();
+
+        var response = await client.GetAsync("/api/products");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<PaginatedList<ProductDto>>(JsonOptions);
+        result.Should().NotBeNull();
+        result!.Items.Should().HaveCount(10);
+        result.TotalCount.Should().Be(29);
+        result.TotalPages.Should().Be(3);
+        result.Page.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task GetProducts_LastPage_ReturnsRemainingProducts()
+    {
+        var client = _factory.CreateAuthenticatedClient();
+
+        var response = await client.GetAsync("/api/products?page=3");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<PaginatedList<ProductDto>>(JsonOptions);
+        result.Should().NotBeNull();
+        result!.Items.Should().HaveCount(9);
+        result.TotalPages.Should().Be(3);
+        result.Page.Should().Be(3);
     }
 }

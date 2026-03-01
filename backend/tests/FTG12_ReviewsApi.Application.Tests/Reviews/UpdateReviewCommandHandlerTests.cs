@@ -98,6 +98,19 @@ public class UpdateReviewCommandHandlerTests
         await act.Should().ThrowAsync<ForbiddenException>();
     }
 
+    [Fact]
+    public async Task Handle_WhenAdmin_ThrowsForbidden()
+    {
+        _currentUserService.UserId.Returns(1);
+        _currentUserService.IsAdmin.Returns(true);
+
+        Func<Task> act = () => _handler.Handle(
+            new UpdateReviewCommand(10, 5, "Text"), CancellationToken.None);
+
+        await act.Should().ThrowAsync<ForbiddenException>()
+            .WithMessage("*cannot edit reviews*");
+    }
+
     private static Review CreateTestReview(int id, int productId, int userId, int statusId = 1)
     {
         return new Review

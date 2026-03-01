@@ -1,5 +1,6 @@
 using FluentAssertions;
 using FTG12_ReviewsApi.Application.Common.Exceptions;
+using FTG12_ReviewsApi.Application.Common.Interfaces;
 using FTG12_ReviewsApi.Application.Users.Commands;
 using FTG12_ReviewsApi.Application.Users.Queries;
 using FTG12_ReviewsApi.Domain.Entities;
@@ -44,13 +45,15 @@ public class GetUsersQueryHandlerTests
 
 public class BanUserCommandHandlerTests
 {
+    private readonly ICurrentUserService _currentUserService = Substitute.For<ICurrentUserService>();
     private readonly IUserRepository _userRepository = Substitute.For<IUserRepository>();
     private readonly IBannedUserRepository _bannedUserRepository = Substitute.For<IBannedUserRepository>();
     private readonly BanUserCommandHandler _handler;
 
     public BanUserCommandHandlerTests()
     {
-        _handler = new BanUserCommandHandler(_userRepository, _bannedUserRepository);
+        _currentUserService.UserId.Returns(1);
+        _handler = new BanUserCommandHandler(_currentUserService, _userRepository, _bannedUserRepository);
     }
 
     [Fact]
@@ -89,6 +92,32 @@ public class BanUserCommandHandlerTests
         Func<Task> act = () => _handler.Handle(new BanUserCommand(2), CancellationToken.None);
 
         await act.Should().ThrowAsync<ConflictException>();
+    }
+
+    [Fact]
+    public async Task Handle_WhenBanningSelf_ThrowsForbidden()
+    {
+        _currentUserService.UserId.Returns(1);
+        var user = new User { Id = 1, Username = "Admin", IsAdministrator = true };
+        _userRepository.GetByIdAsync(1, Arg.Any<CancellationToken>()).Returns(user);
+
+        Func<Task> act = () => _handler.Handle(new BanUserCommand(1), CancellationToken.None);
+
+        await act.Should().ThrowAsync<ForbiddenException>()
+            .WithMessage("*cannot ban themselves*");
+    }
+
+    [Fact]
+    public async Task Handle_WhenBanningAdmin_ThrowsForbidden()
+    {
+        _currentUserService.UserId.Returns(1);
+        var user = new User { Id = 5, Username = "Admin2", IsAdministrator = true };
+        _userRepository.GetByIdAsync(5, Arg.Any<CancellationToken>()).Returns(user);
+
+        Func<Task> act = () => _handler.Handle(new BanUserCommand(5), CancellationToken.None);
+
+        await act.Should().ThrowAsync<ForbiddenException>()
+            .WithMessage("*cannot ban other administrators*");
     }
 }
 

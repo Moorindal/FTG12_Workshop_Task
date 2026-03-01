@@ -30,6 +30,7 @@ public class AdminUsersController(IMediator mediator) : ControllerBase
     /// </summary>
     [HttpPost("{id:int}/ban")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> BanUserAsync(int id, CancellationToken cancellationToken)

@@ -1,4 +1,5 @@
 using FTG12_ReviewsApi.Application.Common.Exceptions;
+using FTG12_ReviewsApi.Application.Common.Interfaces;
 using FTG12_ReviewsApi.Application.Users.DTOs;
 using FTG12_ReviewsApi.Domain.Entities;
 using FTG12_ReviewsApi.Domain.Repositories;
@@ -15,6 +16,7 @@ public record BanUserCommand(int UserId) : IRequest<UserDto>;
 /// Handles <see cref="BanUserCommand"/> by adding a ban record.
 /// </summary>
 public class BanUserCommandHandler(
+    ICurrentUserService currentUserService,
     IUserRepository userRepository,
     IBannedUserRepository bannedUserRepository) : IRequestHandler<BanUserCommand, UserDto>
 {
@@ -22,6 +24,16 @@ public class BanUserCommandHandler(
     {
         var user = await userRepository.GetByIdAsync(request.UserId, cancellationToken)
             ?? throw new NotFoundException(nameof(User), request.UserId);
+
+        if (request.UserId == currentUserService.UserId)
+        {
+            throw new ForbiddenException("Administrators cannot ban themselves.");
+        }
+
+        if (user.IsAdministrator)
+        {
+            throw new ForbiddenException("Administrators cannot ban other administrators.");
+        }
 
         var existing = await bannedUserRepository.GetByUserIdAsync(request.UserId, cancellationToken);
         if (existing is not null)

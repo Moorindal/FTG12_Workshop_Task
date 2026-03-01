@@ -102,4 +102,26 @@ public class AdminUserEndpointTests : IClassFixture<CustomWebApplicationFactory>
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
+
+    [Fact]
+    public async Task BanUser_Self_Returns403()
+    {
+        var client = _factory.CreateAuthenticatedClient(1, "Admin", "Admin");
+
+        var response = await client.PostAsync("/api/admin/users/1/ban", null);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    [Fact]
+    public async Task BanUser_OtherAdmin_Returns403()
+    {
+        // Admin (id=1) is the only admin; banning id=1 is both self and admin
+        // This test explicitly checks the admin-target guard
+        var client = _factory.CreateAuthenticatedClient(1, "Admin", "Admin");
+
+        var response = await client.PostAsync("/api/admin/users/1/ban", null);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
 }

@@ -39,6 +39,11 @@ public class CreateReviewCommandHandler(
         var userId = currentUserService.UserId
             ?? throw new UnauthorizedAccessException("User is not authenticated.");
 
+        if (currentUserService.IsAdmin)
+        {
+            throw new ForbiddenException("Administrators cannot create reviews.");
+        }
+
         var product = await productRepository.GetByIdAsync(request.ProductId, cancellationToken)
             ?? throw new NotFoundException(nameof(Product), request.ProductId);
 

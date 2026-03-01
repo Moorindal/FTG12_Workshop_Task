@@ -21,8 +21,8 @@ public class ReviewEndpointTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task CreateReview_WithValidData_Returns201()
     {
-        // User3 (id=4) has not reviewed product 1 in seed data
-        var client = _factory.CreateAuthenticatedClient(4, "User3", "User");
+        // Admin (id=1) has no reviews in seed data
+        var client = _factory.CreateAuthenticatedClient(1, "Admin", "User");
 
         var response = await client.PostAsJsonAsync("/api/reviews",
             new { ProductId = 1, Rating = 4, Text = "Good product" });
@@ -195,8 +195,8 @@ public class ReviewEndpointTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task GetReviewsByProduct_WhenUserHasNoReview_ReturnsNullUserReview()
     {
-        // User3 (id=4) has no review for product 1
-        var client = _factory.CreateAuthenticatedClient(4, "User3", "User");
+        // Admin (id=1) has no reviews in seed data
+        var client = _factory.CreateAuthenticatedClient(1, "Admin", "User");
 
         var response = await client.GetAsync("/api/products/1/reviews");
 
@@ -219,5 +219,58 @@ public class ReviewEndpointTests : IClassFixture<CustomWebApplicationFactory>
         result.Should().NotBeNull();
         result!.Items.Should().NotBeEmpty();
         result.Items.Should().OnlyContain(r => r.UserId == 2);
+    }
+
+    [Fact]
+    public async Task GetMyReviews_DefaultPageSize_ReturnsPaginatedResults()
+    {
+        // User1 (id=2) has 29 reviews (one per product) — 3 pages at pageSize=10
+        var client = _factory.CreateAuthenticatedClient(2, "User1", "User");
+
+        var response = await client.GetAsync("/api/reviews/my");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<PaginatedList<ReviewDto>>(JsonOptions);
+        result.Should().NotBeNull();
+        result!.Items.Should().HaveCount(10);
+        result.TotalCount.Should().Be(29);
+        result.TotalPages.Should().Be(3);
+    }
+
+    [Fact]
+    public async Task GetMyReviews_LastPage_ReturnsRemainingReviews()
+    {
+        var client = _factory.CreateAuthenticatedClient(2, "User1", "User");
+
+        var response = await client.GetAsync("/api/reviews/my?page=3");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<PaginatedList<ReviewDto>>(JsonOptions);
+        result.Should().NotBeNull();
+        result!.Items.Should().HaveCount(9);
+        result.TotalPages.Should().Be(3);
+        result.Page.Should().Be(3);
+    }
+
+    [Fact]
+    public async Task CreateReview_AsAdmin_Returns403()
+    {
+        var client = _factory.CreateAuthenticatedClient(1, "Admin", "Admin");
+
+        var response = await client.PostAsJsonAsync("/api/reviews",
+            new { ProductId = 1, Rating = 4, Text = "Admin review" });
+
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    [Fact]
+    public async Task UpdateReview_AsAdmin_Returns403()
+    {
+        var client = _factory.CreateAuthenticatedClient(1, "Admin", "Admin");
+
+        var response = await client.PutAsJsonAsync("/api/reviews/1",
+            new { Rating = 3, Text = "Admin update" });
+
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 }
