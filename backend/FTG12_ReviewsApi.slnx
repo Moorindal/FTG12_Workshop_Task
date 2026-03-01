@@ -5,4 +5,8 @@
     <Project Path="src/FTG12_ReviewsApi.Application/FTG12_ReviewsApi.Application.csproj" />
     <Project Path="src/FTG12_ReviewsApi.Infrastructure/FTG12_ReviewsApi.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/FTG12_ReviewsApi.Application.Tests/FTG12_ReviewsApi.Application.Tests.csproj" />
+    <Project Path="tests/FTG12_ReviewsApi.Api.Tests/FTG12_ReviewsApi.Api.Tests.csproj" />
+  </Folder>
 </Solution>

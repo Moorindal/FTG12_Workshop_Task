@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -8,5 +9,11 @@ export default defineConfig({
     // Port must stay above 7000 and not conflict with the backend (7100).
     port: 7200,
     strictPort: true,
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.ts',
+    css: true,
   },
 })

@@ -1,5 +1,5 @@
 ---
-description: Implement task by number with full repo/architecture study + add/update backend & frontend tests + verify run + verify all tests (no commit)
+description: Implement task by number
 ---
 
 You are working inside a VS Code workspace that is a Git repository containing backend (.NET) and frontend code.

@@ -1,0 +1,51 @@
+.admin-reviews-table-wrapper {
+  overflow-x: auto;
+}
+
+.admin-reviews-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.admin-reviews-table th,
+.admin-reviews-table td {
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.admin-reviews-table th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.admin-reviews-table td:nth-child(5) {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.badge-approved {
+  background: rgba(46, 125, 50, 0.15);
+  color: #2e7d32;
+}
+
+.badge-pending {
+  background: rgba(245, 166, 35, 0.15);
+  color: #b8860b;
+}
+
+.badge-rejected {
+  background: rgba(211, 47, 47, 0.15);
+  color: #d32f2f;
+}
