@@ -97,8 +97,13 @@ export function getProduct(id: number, signal?: AbortSignal): Promise<Product> {
   return get<Product>(`/api/products/${id}`, signal);
 }
 
-export function getProductReviews(productId: number, page: number, pageSize: number, signal?: AbortSignal): Promise<PaginatedResponse<Review>> {
-  return get<PaginatedResponse<Review>>(`/api/products/${productId}/reviews?page=${page}&pageSize=${pageSize}`, signal);
+export interface ProductReviewsResponse {
+  reviews: PaginatedResponse<Review>;
+  userReview: Review | null;
+}
+
+export function getProductReviews(productId: number, page: number, pageSize: number, signal?: AbortSignal): Promise<ProductReviewsResponse> {
+  return get<ProductReviewsResponse>(`/api/products/${productId}/reviews?page=${page}&pageSize=${pageSize}`, signal);
 }
 
 export function createReview(productId: number, rating: number, text: string, signal?: AbortSignal): Promise<Review> {

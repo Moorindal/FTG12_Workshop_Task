@@ -90,4 +90,42 @@ public class AdminReviewEndpointTests : IClassFixture<CustomWebApplicationFactor
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
+
+    [Fact]
+    public async Task ChangeReviewStatus_ApprovedToRejected_AsAdmin_Returns200()
+    {
+        var client = _factory.CreateAuthenticatedClient(1, "Admin", "Admin");
+
+        // Review 1 is seeded as Approved (StatusId 2) — reject it
+        var response = await client.PutAsJsonAsync("/api/admin/reviews/1/status",
+            new { StatusId = 3 });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<ReviewDto>(JsonOptions);
+        result.Should().NotBeNull();
+        result!.StatusId.Should().Be(3);
+        result.StatusName.Should().Be("Rejected");
+    }
+
+    [Fact]
+    public async Task ChangeReviewStatus_InvalidStatusId_Returns400()
+    {
+        var client = _factory.CreateAuthenticatedClient(1, "Admin", "Admin");
+
+        var response = await client.PutAsJsonAsync("/api/admin/reviews/1/status",
+            new { StatusId = 99 });
+
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
+    public async Task ChangeReviewStatus_Unauthenticated_Returns401()
+    {
+        var client = _factory.CreateClient();
+
+        var response = await client.PutAsJsonAsync("/api/admin/reviews/1/status",
+            new { StatusId = 2 });
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
 }

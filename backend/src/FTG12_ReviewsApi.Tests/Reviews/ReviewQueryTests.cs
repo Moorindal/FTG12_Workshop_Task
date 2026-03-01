@@ -11,11 +11,12 @@ public class GetReviewsByProductQueryHandlerTests
 {
     private readonly IProductRepository _productRepository = Substitute.For<IProductRepository>();
     private readonly IReviewRepository _reviewRepository = Substitute.For<IReviewRepository>();
+    private readonly ICurrentUserService _currentUserService = Substitute.For<ICurrentUserService>();
     private readonly GetReviewsByProductQueryHandler _handler;
 
     public GetReviewsByProductQueryHandlerTests()
     {
-        _handler = new GetReviewsByProductQueryHandler(_productRepository, _reviewRepository);
+        _handler = new GetReviewsByProductQueryHandler(_productRepository, _reviewRepository, _currentUserService);
     }
 
     [Fact]
@@ -34,8 +35,8 @@ public class GetReviewsByProductQueryHandlerTests
 
         var result = await _handler.Handle(new GetReviewsByProductQuery(1), CancellationToken.None);
 
-        Assert.Equal(2, result.TotalCount);
-        Assert.All(result.Items, r => Assert.Equal(2, r.StatusId));
+        Assert.Equal(2, result.Reviews.TotalCount);
+        Assert.All(result.Reviews.Items, r => Assert.Equal(2, r.StatusId));
     }
 
     [Fact]
@@ -61,8 +62,8 @@ public class GetReviewsByProductQueryHandlerTests
 
         var result = await _handler.Handle(new GetReviewsByProductQuery(1), CancellationToken.None);
 
-        Assert.Empty(result.Items);
-        Assert.Equal(0, result.TotalCount);
+        Assert.Empty(result.Reviews.Items);
+        Assert.Equal(0, result.Reviews.TotalCount);
     }
 
     private static Review CreateReview(int id, int productId, int userId, int statusId, string statusName, int rating, string text)

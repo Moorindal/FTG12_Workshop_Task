@@ -28,19 +28,22 @@ export function ReviewStatusActions({ review, onStatusChange }: ReviewStatusActi
   const statusLower = review.statusName.toLowerCase();
   const isPending = statusLower.includes('pending');
   const isRejected = statusLower.includes('rejected');
+  const isApproved = statusLower.includes('approved');
 
-  if (!isPending && !isRejected) return null;
+  if (!isPending && !isRejected && !isApproved) return null;
 
   return (
     <div className="review-status-actions">
-      <button
-        className="btn-approve"
-        onClick={() => handleAction(2)}
-        disabled={loading}
-      >
-        {loading ? '...' : 'Approve'}
-      </button>
-      {isPending && (
+      {(isPending || isRejected) && (
+        <button
+          className="btn-approve"
+          onClick={() => handleAction(2)}
+          disabled={loading}
+        >
+          {loading ? '...' : 'Approve'}
+        </button>
+      )}
+      {(isPending || isApproved) && (
         <button
           className="btn-reject"
           onClick={() => handleAction(3)}

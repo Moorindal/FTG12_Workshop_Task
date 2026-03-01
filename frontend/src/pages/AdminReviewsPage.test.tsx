@@ -63,4 +63,16 @@ describe('AdminReviewsPage', () => {
     expect(screen.getByRole('alert')).toBeInTheDocument();
     expect(screen.getByText('Server error')).toBeInTheDocument();
   });
+
+  it('renders Reject action for approved reviews', () => {
+    mockResult = {
+      reviews: [
+        { id: 5, productId: 2, productName: 'Gadget', userId: 3, username: 'reviewer', statusId: 2, statusName: 'Approved', rating: 5, text: 'Excellent!', createdAt: '2024-06-15T10:00:00Z' },
+      ],
+      loading: false, error: null, page: 1, setPage: mockSetPage, totalPages: 1, filters: {}, setFilters: mockSetFilters, refresh: mockRefresh,
+    };
+    render(<AdminReviewsPage />);
+    expect(screen.getByText('Reject')).toBeInTheDocument();
+    expect(screen.queryByText('Approve')).not.toBeInTheDocument();
+  });
 });

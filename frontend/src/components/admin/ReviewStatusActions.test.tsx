@@ -27,10 +27,11 @@ describe('ReviewStatusActions', () => {
     expect(screen.queryByText('Reject')).not.toBeInTheDocument();
   });
 
-  it('renders nothing for approved reviews', () => {
+  it('renders only Reject for approved reviews', () => {
     const review = makeReview({ statusId: 2, statusName: 'Approved' });
-    const { container } = render(<ReviewStatusActions review={review} onStatusChange={vi.fn()} />);
-    expect(container.innerHTML).toBe('');
+    render(<ReviewStatusActions review={review} onStatusChange={vi.fn()} />);
+    expect(screen.getByText('Reject')).toBeInTheDocument();
+    expect(screen.queryByText('Approve')).not.toBeInTheDocument();
   });
 
   it('calls API and onStatusChange on approve', async () => {
@@ -63,6 +64,28 @@ describe('ReviewStatusActions', () => {
     render(<ReviewStatusActions review={review} onStatusChange={onStatusChange} />);
     await user.click(screen.getByText('Approve'));
     expect(onStatusChange).not.toHaveBeenCalled();
+    vi.restoreAllMocks();
+  });
+
+  it('calls API with statusId 3 and onStatusChange on reject for approved review', async () => {
+    const user = userEvent.setup();
+    const onStatusChange = vi.fn();
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    const review = makeReview({ id: 99, statusId: 2, statusName: 'Approved' });
+    let capturedStatusId: number | null = null;
+    server.use(
+      http.put('http://localhost:7100/api/admin/reviews/99/status', async ({ request }) => {
+        const body = await request.json() as Record<string, unknown>;
+        capturedStatusId = body.statusId as number;
+        return HttpResponse.json(makeReview({ id: 99, statusId: 3, statusName: 'Rejected' }));
+      }),
+    );
+    render(<ReviewStatusActions review={review} onStatusChange={onStatusChange} />);
+    await user.click(screen.getByText('Reject'));
+    await waitFor(() => {
+      expect(onStatusChange).toHaveBeenCalled();
+    });
+    expect(capturedStatusId).toBe(3);
     vi.restoreAllMocks();
   });
 });

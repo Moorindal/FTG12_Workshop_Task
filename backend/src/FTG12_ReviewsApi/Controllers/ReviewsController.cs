@@ -59,9 +59,11 @@ public class ReviewsController(IMediator mediator) : ControllerBase
     }
 
     /// <summary>
-    /// Returns paginated approved reviews for a specific product.
+    /// Returns paginated approved reviews for a specific product,
+    /// along with the current user's review (if authenticated and exists).
     /// </summary>
     [HttpGet("api/products/{productId:int}/reviews")]
+    [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetReviewsByProductAsync(

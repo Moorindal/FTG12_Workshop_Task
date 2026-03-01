@@ -33,7 +33,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             services.AddSingleton(_keepAliveConnection);
 
             services.RemoveAll(typeof(DbContextOptions<AppDbContext>));
-            services.AddDbContext<AppDbContext>(options => options.UseSqlite(_keepAliveConnection));
+            services.AddDbContext<AppDbContext>(options => options.UseSqlite(_connectionString));
 
             services.RemoveAll(typeof(IConnectionStringAccessor));
             services.AddSingleton<IConnectionStringAccessor>(

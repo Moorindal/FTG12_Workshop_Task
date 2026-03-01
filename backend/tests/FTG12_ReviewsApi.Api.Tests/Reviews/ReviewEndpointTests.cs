@@ -110,14 +110,100 @@ public class ReviewEndpointTests : IClassFixture<CustomWebApplicationFactory>
     [Fact]
     public async Task GetReviewsByProduct_ReturnsApprovedOnly()
     {
+        // Admin (id=1) has no reviews on product 1, so visible list should contain only approved
         var client = _factory.CreateAuthenticatedClient();
 
         var response = await client.GetAsync("/api/products/1/reviews");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var result = await response.Content.ReadFromJsonAsync<PaginatedList<ReviewDto>>(JsonOptions);
+        var result = await response.Content.ReadFromJsonAsync<ProductReviewsDto>(JsonOptions);
         result.Should().NotBeNull();
-        result!.Items.Should().OnlyContain(r => r.StatusId == 2);
+        result!.Reviews.Items.Should().OnlyContain(r => r.StatusId == 2);
+    }
+
+    [Fact]
+    public async Task GetReviewsByProduct_AuthUserWithPendingReview_IncludesInList()
+    {
+        // User3 (id=4) has a pending review for product 2 (StatusId=1)
+        var client = _factory.CreateAuthenticatedClient(4, "User3", "User");
+
+        var response = await client.GetAsync("/api/products/2/reviews");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<ProductReviewsDto>(JsonOptions);
+        result.Should().NotBeNull();
+        result!.Reviews.Items.Should().Contain(r => r.UserId == 4 && r.StatusId == 1);
+    }
+
+    [Fact]
+    public async Task GetReviewsByProduct_AuthUserWithRejectedReview_IncludesInList()
+    {
+        // User3 (id=4) has a rejected review for product 3 (StatusId=3)
+        var client = _factory.CreateAuthenticatedClient(4, "User3", "User");
+
+        var response = await client.GetAsync("/api/products/3/reviews");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<ProductReviewsDto>(JsonOptions);
+        result.Should().NotBeNull();
+        result!.Reviews.Items.Should().Contain(r => r.UserId == 4 && r.StatusId == 3);
+    }
+
+    [Fact]
+    public async Task GetReviewsByProduct_DifferentUser_ExcludesPendingReviews()
+    {
+        // User1 (id=2) viewing product 2 — should NOT see User3's pending review
+        var client = _factory.CreateAuthenticatedClient(2, "User1", "User");
+
+        var response = await client.GetAsync("/api/products/2/reviews");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<ProductReviewsDto>(JsonOptions);
+        result.Should().NotBeNull();
+        result!.Reviews.Items.Should().NotContain(r => r.UserId == 4 && r.StatusId == 1);
+        result.Reviews.Items.Should().OnlyContain(r => r.StatusId == 2 || r.UserId == 2);
+    }
+
+    [Fact]
+    public async Task GetReviewsByProduct_Unauthenticated_ReturnsOnlyApproved()
+    {
+        var client = _factory.CreateClient();
+
+        var response = await client.GetAsync("/api/products/2/reviews");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<ProductReviewsDto>(JsonOptions);
+        result.Should().NotBeNull();
+        result!.Reviews.Items.Should().OnlyContain(r => r.StatusId == 2);
+    }
+
+    [Fact]
+    public async Task GetReviewsByProduct_WhenUserHasReview_ReturnsUserReview()
+    {
+        // User1 (id=2) has an approved review for product 1
+        var client = _factory.CreateAuthenticatedClient(2, "User1", "User");
+
+        var response = await client.GetAsync("/api/products/1/reviews");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<ProductReviewsDto>(JsonOptions);
+        result.Should().NotBeNull();
+        result!.UserReview.Should().NotBeNull();
+        result.UserReview!.UserId.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task GetReviewsByProduct_WhenUserHasNoReview_ReturnsNullUserReview()
+    {
+        // User3 (id=4) has no review for product 1
+        var client = _factory.CreateAuthenticatedClient(4, "User3", "User");
+
+        var response = await client.GetAsync("/api/products/1/reviews");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var result = await response.Content.ReadFromJsonAsync<ProductReviewsDto>(JsonOptions);
+        result.Should().NotBeNull();
+        result!.UserReview.Should().BeNull();
     }
 
     [Fact]

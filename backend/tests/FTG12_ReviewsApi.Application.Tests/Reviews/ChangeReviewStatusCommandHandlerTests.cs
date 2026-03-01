@@ -90,4 +90,34 @@ public class ChangeReviewStatusCommandHandlerTests
         result.StatusId.Should().Be(statusId);
         result.StatusName.Should().Be(statusName);
     }
+
+    [Fact]
+    public async Task Handle_ApprovedToRejected_UpdatesSuccessfully()
+    {
+        var review = new Review
+        {
+            Id = 1, ProductId = 1, UserId = 2, StatusId = 2, Rating = 4, Text = "Good",
+            CreatedAt = DateTime.UtcNow,
+            Product = new Product { Id = 1, Name = "P" },
+            User = new User { Id = 2, Username = "User1" },
+            Status = new ReviewStatus { Id = 2, Name = "Approved" }
+        };
+        _reviewRepository.GetByIdAsync(1, Arg.Any<CancellationToken>()).Returns(review);
+
+        var updatedReview = new Review
+        {
+            Id = 1, ProductId = 1, UserId = 2, StatusId = 3, Rating = 4, Text = "Good",
+            CreatedAt = review.CreatedAt,
+            Product = new Product { Id = 1, Name = "P" },
+            User = new User { Id = 2, Username = "User1" },
+            Status = new ReviewStatus { Id = 3, Name = "Rejected" }
+        };
+        _reviewRepository.GetByIdAsync(1, Arg.Any<CancellationToken>()).Returns(updatedReview);
+
+        var result = await _handler.Handle(new ChangeReviewStatusCommand(1, 3), CancellationToken.None);
+
+        result.StatusId.Should().Be(3);
+        result.StatusName.Should().Be("Rejected");
+        await _reviewRepository.Received(1).UpdateAsync(Arg.Is<Review>(r => r.StatusId == 3), Arg.Any<CancellationToken>());
+    }
 }

@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Review } from '../types/review';
-import type { PaginatedResponse } from '../types/product';
+import type { ProductReviewsResponse } from '../services/apiClient';
 import * as api from '../services/apiClient';
 
 interface UseProductReviewsResult {
   reviews: Review[];
+  userReview: Review | null;
   loading: boolean;
   error: string | null;
   page: number;
@@ -14,7 +15,7 @@ interface UseProductReviewsResult {
 }
 
 export function useProductReviews(productId: number, pageSize = 10): UseProductReviewsResult {
-  const [data, setData] = useState<PaginatedResponse<Review> | null>(null);
+  const [data, setData] = useState<ProductReviewsResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
@@ -48,12 +49,13 @@ export function useProductReviews(productId: number, pageSize = 10): UseProductR
   }, [productId, page, pageSize, refreshCounter]);
 
   return {
-    reviews: data?.items ?? [],
+    reviews: data?.reviews.items ?? [],
+    userReview: data?.userReview ?? null,
     loading,
     error,
     page,
     setPage: changePage,
-    totalPages: data?.totalPages ?? 0,
+    totalPages: data?.reviews.totalPages ?? 0,
     refresh,
   };
 }

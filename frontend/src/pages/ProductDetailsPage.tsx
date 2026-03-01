@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import type { Product } from '../types/product';
 import { useProductReviews } from '../hooks/useProductReviews';
-import { useCreateReview } from '../hooks/useReviews';
+import { useCreateReview, useUpdateReview } from '../hooks/useReviews';
 import { useAuth } from '../hooks/useAuth';
 import { ReviewCard } from '../components/reviews/ReviewCard';
 import { ReviewForm } from '../components/reviews/ReviewForm';
@@ -15,6 +15,7 @@ export function ProductDetailsPage() {
   const productId = Number(id);
   const { user } = useAuth();
   const { createReview } = useCreateReview();
+  const { updateReview } = useUpdateReview();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [productLoading, setProductLoading] = useState(true);
@@ -26,13 +27,13 @@ export function ProductDetailsPage() {
     setProductError(null);
   }, [productId]);
 
-  const { reviews, loading: reviewsLoading, error: reviewsError, page, setPage, totalPages, refresh } =
+  const { reviews, userReview, loading: reviewsLoading, error: reviewsError, page, setPage, totalPages, refresh } =
     useProductReviews(productId);
 
   const [showForm, setShowForm] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const hasReviewed = reviews.some((r) => r.userId === user?.id);
+  const hasReviewed = userReview !== null;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -59,6 +60,15 @@ export function ProductDetailsPage() {
     setTimeout(() => setSuccessMessage(null), 3000);
   };
 
+  const handleUpdateReview = async (rating: number, text: string) => {
+    if (!userReview) return;
+    await updateReview(userReview.id, rating, text);
+    setShowForm(false);
+    setSuccessMessage('Review updated successfully!');
+    refresh();
+    setTimeout(() => setSuccessMessage(null), 3000);
+  };
+
   if (productLoading) return <p className="status-loading">Loading product...</p>;
   if (productError) return <p className="status-error" role="alert">{productError}</p>;
   if (!product) return <p className="status-error">Product not found.</p>;
@@ -74,11 +84,23 @@ export function ProductDetailsPage() {
           {!reviewsLoading && !hasReviewed && !showForm && (
             <button onClick={() => setShowForm(true)}>Add Review</button>
           )}
+          {!reviewsLoading && hasReviewed && !showForm && (
+            <button onClick={() => setShowForm(true)}>Edit Review</button>
+          )}
         </div>
 
         {successMessage && <p className="success-message">{successMessage}</p>}
 
-        {showForm && (
+        {showForm && hasReviewed && (
+          <ReviewForm
+            productId={productId}
+            existingReview={userReview}
+            onSubmit={handleUpdateReview}
+            onCancel={() => setShowForm(false)}
+          />
+        )}
+
+        {showForm && !hasReviewed && (
           <ReviewForm
             productId={productId}
             onSubmit={handleCreateReview}
@@ -95,7 +117,7 @@ export function ProductDetailsPage() {
 
         <div className="reviews-list">
           {reviews.map((review) => (
-            <ReviewCard key={review.id} review={review} />
+            <ReviewCard key={review.id} review={review} currentUserId={user?.id} />
           ))}
         </div>
 

@@ -23,14 +23,17 @@ public static class DependencyInjection
     {
         const string connectionString = "DataSource=ReviewsDb;Mode=Memory;Cache=Shared";
 
-        var connection = new SqliteConnection(connectionString);
-        connection.Open();
+        // Keep one connection open for the lifetime of the app to prevent the
+        // in-memory database from being destroyed. Each DbContext gets its own
+        // connection so concurrent requests don't conflict with SQLite Error 5.
+        var keepAliveConnection = new SqliteConnection(connectionString);
+        keepAliveConnection.Open();
 
-        services.AddSingleton(connection);
+        services.AddSingleton(keepAliveConnection);
 
         services.AddDbContext<AppDbContext>(options =>
         {
-            options.UseSqlite(connection);
+            options.UseSqlite(connectionString);
         });
 
         services.AddFluentMigratorCore()

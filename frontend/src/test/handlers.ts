@@ -18,7 +18,10 @@ export const handlers = [
     return HttpResponse.json(createProduct({ id, name: 'Widget ' + id }));
   }),
   http.get(API + '/api/products/:id/reviews', () => {
-    return HttpResponse.json(createPaginatedResponse([createReview()]));
+    return HttpResponse.json({
+      reviews: createPaginatedResponse([createReview()]),
+      userReview: null,
+    });
   }),
   http.post(API + '/api/reviews', async ({ request }) => {
     const body = await request.json() as Record<string, unknown>;

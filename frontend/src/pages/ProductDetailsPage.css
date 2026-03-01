@@ -67,3 +67,26 @@
   border-radius: 4px;
   margin-bottom: 1rem;
 }
+
+.status-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.badge-approved {
+  background: rgba(46, 125, 50, 0.15);
+  color: #2e7d32;
+}
+
+.badge-pending {
+  background: rgba(245, 166, 35, 0.15);
+  color: #b8860b;
+}
+
+.badge-rejected {
+  background: rgba(211, 47, 47, 0.15);
+  color: #d32f2f;
+}
