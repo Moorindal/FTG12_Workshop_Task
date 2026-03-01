@@ -1,9 +1,11 @@
 import type { HealthStatus } from '../types/health';
 
-/** Base URL for the backend API. Falls back to localhost when the VITE_API_BASE_URL env var is not set. */
+/** Base URL for the backend API. Falls back to localhost when the VITE_API_BASE_URL env var is not set or is empty/whitespace. */
+const rawApiBaseUrl = (import.meta as { env?: { VITE_API_BASE_URL?: string } }).env?.VITE_API_BASE_URL;
 const API_BASE_URL =
-  (import.meta as { env?: { VITE_API_BASE_URL?: string } }).env?.VITE_API_BASE_URL ??
-  'http://localhost:7100';
+  rawApiBaseUrl && rawApiBaseUrl.trim() !== ''
+    ? rawApiBaseUrl.trim()
+    : 'http://localhost:7100';
 
 /**
  * Fetches the health status from the backend API.
