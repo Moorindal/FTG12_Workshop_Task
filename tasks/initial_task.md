@@ -101,7 +101,7 @@ FTG12_Workshop_Task/
 | 4 | Create Web API project | Run `dotnet new webapi -n FTG12_ReviewsApi -o backend/FTG12_ReviewsApi --use-controllers`. |
 | 5 | Add project to solution | Run `dotnet sln backend/FTG12_ReviewsApi.slnx add backend/FTG12_ReviewsApi/FTG12_ReviewsApi.csproj`. |
 | 6 | Configure `FTG12_ReviewsApi.csproj` | Target `net10.0`. Enable `<Nullable>enable</Nullable>` and `<ImplicitUsings>enable</ImplicitUsings>`. Add `<AssemblyName>` and `<RootNamespace>` set to `FTG12_ReviewsApi`. |
-| 7 | Implement `Program.cs` | Use top-level statements. Register controllers (`AddControllers()`). Configure CORS to allow `http://localhost:7200`. Map controllers. Optionally add `AddHealthChecks()`. Configure Kestrel on `http://localhost:7100`. |
+| 7 | Implement `Program.cs` | Use top-level statements. Register controllers (`AddControllers()`). Configure CORS to allow `http://localhost:7200`. Map controllers. Optionally add `AddHealthChecks()`. Application URL (`http://localhost:7100`) is configured via `Properties/launchSettings.json` (Step 12); no explicit Kestrel URL binding is required in `Program.cs`. |
 | 8 | Create `Models/HealthStatus.cs` | Define as a C# record: `public record HealthStatus(string Status, DateTime Timestamp);`. |
 | 9 | Create `Controllers/HealthController.cs` | `[ApiController]`, `[Route("[controller]")]`. Single `[HttpGet]` action at `/health` returning `Ok(new HealthStatus("Healthy", DateTime.UtcNow))`. Add XML doc comments. |
 | 10 | Configure `appsettings.json` | Set logging levels (`Information` default, `Warning` for Microsoft/ASP.NET). Set `AllowedHosts: "*"`. |
@@ -127,7 +127,7 @@ FTG12_Workshop_Task/
 | # | Task | Details |
 |---|------|---------|
 | 22 | Create `docs/backend-guide.md` | **Prerequisites:** .NET 10 SDK. **Build:** `dotnet build` from `backend/`. **Run:** `dotnet run --project FTG12_ReviewsApi`. **Verify:** `curl http://localhost:7100/health` → `200 OK` with JSON `{ "status": "Healthy", "timestamp": "..." }`. |
-| 23 | Create `docs/frontend-guide.md` | **Prerequisites:** Node.js 20+, npm 10+. **Install:** `npm install` from `frontend/`. **Run:** `npm run dev`. **Verify:** Open `http://localhost:7200` — page loads and displays health check result. **Build for production:** `npm run build` outputs to `dist/`. |
+| 23 | Create `docs/frontend-guide.md` | **Prerequisites:** Node.js 20.19.0+ (or 22.12.0+), npm 10+. **Install:** `npm install` from `frontend/`. **Run:** `npm run dev`. **Verify:** Open `http://localhost:7200` — page loads and displays health check result. **Build for production:** `npm run build` outputs to `dist/`. |
 
 ---
 
@@ -146,7 +146,7 @@ FTG12_Workshop_Task/
 - `builder.Services.AddControllers()`
 - CORS policy allowing `http://localhost:7200`
 - `app.MapControllers()`
-- Kestrel bound to `http://localhost:7100`
+- Application URL (`http://localhost:7100`) is set in `Properties/launchSettings.json`, not in `Program.cs`
 
 ### `frontend/vite.config.ts`
 

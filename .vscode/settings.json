@@ -1,0 +1,16 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^git pull$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^git stash ; git pull$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^git add \\. ; git commit -m \"fix: documentation changes\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

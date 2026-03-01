@@ -8,7 +8,7 @@ This guide describes how to build and run the React 19 + TypeScript frontend.
 
 | Requirement | Version | Verify |
 |------------|---------|--------|
-| Node.js | 20.0 or later | `node --version` |
+| Node.js | 20.19.0 or later (or 22.12.0+) | `node --version` |
 | npm | 10.0 or later | `npm --version` |
 
 Download Node.js from [https://nodejs.org/](https://nodejs.org/).
