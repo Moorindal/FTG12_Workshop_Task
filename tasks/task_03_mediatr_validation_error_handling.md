@@ -53,5 +53,5 @@ Set up MediatR as the mediator for all application use-cases, add a FluentValida
 
 ## Testing Notes
 - Manual: Trigger errors by sending invalid requests (once endpoints exist).
-- Automated: Exception mapping logic and `ValidationBehavior` are prime candidates for unit tests (Task 14).
+- Automated: Exception mapping logic and `ValidationBehavior` are prime candidates for unit tests (Task 12).
 - Verify the middleware does not swallow the `OperationCanceledException` (let it propagate normally for cancelled requests).
