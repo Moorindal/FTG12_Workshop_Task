@@ -23,7 +23,7 @@ public class HealthController : ControllerBase
     /// Response: { "status": "Healthy", "timestamp": "2026-03-01T12:00:00Z" }
     /// </code>
     /// </example>
-    [HttpGet("/health")]
+    [HttpGet]
     [ProducesResponseType(typeof(HealthStatus), StatusCodes.Status200OK)]
     public IActionResult GetHealth()
     {
