@@ -36,4 +36,4 @@ Restructure the existing single-project backend solution into a Clean Architectu
 
 ## Testing Notes
 - Manual: `dotnet build` + `dotnet run` + `curl http://localhost:7100/health`.
-- No automated tests yet (test projects are created in Tasks 14–15).
+- No automated tests yet (test projects are created in Tasks 12–13).
