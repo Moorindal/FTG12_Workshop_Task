@@ -8,7 +8,8 @@ namespace FTG12_ReviewsApi.Application.Common.Interfaces;
 public interface IJwtTokenService
 {
     /// <summary>
-    /// Generates a JWT containing user claims (sub, unique_name, role).
+    /// Generates a JWT containing user claims based on <see cref="System.Security.Claims.ClaimTypes.NameIdentifier"/>,
+    /// <see cref="System.Security.Claims.ClaimTypes.Name"/>, and <see cref="System.Security.Claims.ClaimTypes.Role"/>.
     /// </summary>
     string GenerateToken(User user);
 }

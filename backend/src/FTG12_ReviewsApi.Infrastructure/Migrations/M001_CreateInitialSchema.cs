@@ -49,10 +49,13 @@ public class M001_CreateInitialSchema : Migration
             .OnColumn("ProductId").Ascending()
             .WithOptions().Unique();
 
-        Create.Table("BannedUsers")
-            .WithColumn("UserId").AsInt32().PrimaryKey()
-                .ForeignKey("FK_BannedUsers_Users", "Users", "Id")
-            .WithColumn("BannedAt").AsDateTime().NotNullable();
+        Execute.Sql("""
+            CREATE TABLE "BannedUsers" (
+                "UserId" INTEGER PRIMARY KEY,
+                "BannedAt" DATETIME NOT NULL,
+                FOREIGN KEY ("UserId") REFERENCES "Users"("Id") ON DELETE CASCADE
+            );
+            """);
 
         Create.Index("IX_BannedUsers_UserId").OnTable("BannedUsers").OnColumn("UserId").Unique();
     }
