@@ -34,9 +34,9 @@ public class M001_CreateInitialSchema : Migration
                 "Rating" INTEGER NOT NULL CHECK ("Rating" >= 1 AND "Rating" <= 5),
                 "Text" VARCHAR(8000) NOT NULL,
                 "CreatedAt" DATETIME NOT NULL,
-                FOREIGN KEY ("ProductId") REFERENCES "Products"("Id"),
-                FOREIGN KEY ("UserId") REFERENCES "Users"("Id"),
-                FOREIGN KEY ("StatusId") REFERENCES "ReviewStatuses"("Id")
+                FOREIGN KEY ("ProductId") REFERENCES "Products"("Id") ON DELETE CASCADE,
+                FOREIGN KEY ("UserId") REFERENCES "Users"("Id") ON DELETE CASCADE,
+                FOREIGN KEY ("StatusId") REFERENCES "ReviewStatuses"("Id") ON DELETE CASCADE
             );
             """);
 
