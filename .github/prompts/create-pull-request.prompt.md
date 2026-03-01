@@ -11,7 +11,7 @@ The commit name is provided as the second argument:
 ${2}
 
 If no branch name is provided or no commit name is provided, STOP and inform the user:
-"Please provide a branch name. Example: /create-pr feature/login-fix"
+"Please provide both a branch name and a commit message. Example: /create-pr feature/login-fix \"Fix login bug when password is empty\""
 
 1) Pre-check
 - Verify this folder is a Git repository.
